@@ -12,7 +12,7 @@ const lastfm = {
 };
 
 app.get('/', (req, res) => {
-  res.send(`ಠ‿↼`);
+  res.send(`👻 💻`);
 })
 
 // User details from Last FM
