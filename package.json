@@ -1,0 +1,26 @@
+{
+  "name": "personal-server",
+  "version": "1.0.0",
+  "description": "A personal server to scrape data from APIs, store in my own database and expose as a RESTFUL API to my portfolio site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnniereg/personal-server.git"
+  },
+  "keywords": [
+    "server",
+    "api",
+    "express",
+    "node",
+    "database"
+  ],
+  "author": "Johnnie Regalado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnniereg/personal-server/issues"
+  },
+  "homepage": "https://github.com/johnniereg/personal-server#readme"
+}
