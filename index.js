@@ -17,8 +17,7 @@ const lastfm = {
 const spotify = {
   client_id: process.env.SPOTIFY_CLIENT_ID,
   client_secret: process.env.SPOTIFY_CLIENT_SECRET,
-  redirect_uri:
-    "https://morning-brushlands-94806.herokuapp.com/api/spotify/callback"
+  redirect_uri: "https://morning-brushlands-94806.herokuapp.com/api/spotify/callback"
 };
 
 const stateKey = "spotify_auth_state";
@@ -41,13 +40,14 @@ app.get('/', (req, res) => {
   res.send(`👻 💻`);
 })
 
-app.get('/api/spotify/login', function (req, res) {
+app.get('/api/spotify/login', (req, res) => {
 
-  var state = generateRandomString(16);
+  const state = generateRandomString(16);
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  let scope = 'user-read-private user-read-email user-read-recently-played';
+
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -58,14 +58,14 @@ app.get('/api/spotify/login', function (req, res) {
     }));
 });
 
-app.get('/api/spotify/callback', function (req, res) {
+app.get('/api/spotify/callback', (req, res) => {
 
   // your application requests refresh and access tokens
   // after checking the state parameter
 
-  var code = req.query.code || null;
-  var state = req.query.state || null;
-  var storedState = req.cookies ? req.cookies[stateKey] : null;
+  const code = req.query.code || null;
+  const state = req.query.state || null;
+  const storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
@@ -74,7 +74,7 @@ app.get('/api/spotify/callback', function (req, res) {
       }));
   } else {
     res.clearCookie(stateKey);
-    var authOptions = {
+    const authOptions = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code: code,
@@ -87,20 +87,20 @@ app.get('/api/spotify/callback', function (req, res) {
       json: true
     };
 
-    request.post(authOptions, function (error, response, body) {
+    request.post(authOptions, (error, response, body) => {
       if (!error && response.statusCode === 200) {
 
-        var access_token = body.access_token,
-          refresh_token = body.refresh_token;
+        const access_token = body.access_token;
+        const refresh_token = body.refresh_token;
 
-        var options = {
-          url: 'https://api.spotify.com/v1/me',
+        const options = {
+          url: 'https://api.spotify.com/v1/me/player/recently-played',
           headers: { 'Authorization': 'Bearer ' + access_token },
           json: true
         };
 
         // use the access token to access the Spotify Web API
-        request.get(options, function (error, response, body) {
+        request.get(options, (error, response, body) => {
           console.log(body);
         });
 
@@ -120,11 +120,11 @@ app.get('/api/spotify/callback', function (req, res) {
   }
 });
 
-app.get('/api/spotify/refresh_token', function (req, res) {
+app.get('/api/spotify/refresh_token', (req, res) => {
 
   // requesting access token from refresh token
-  var refresh_token = req.query.refresh_token;
-  var authOptions = {
+  const refresh_token = req.query.refresh_token;
+  const authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     headers: { 'Authorization': 'Basic ' + (new Buffer(spotify.client_id + ':' + spotify.client_secret).toString('base64')) },
     form: {
@@ -143,6 +143,8 @@ app.get('/api/spotify/refresh_token', function (req, res) {
     }
   });
 });
+
+// LastFM Routes
 
 // User details from Last FM
 app.get('/api/lastfm/user-info', (req, res) => {
