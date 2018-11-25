@@ -1,8 +1,11 @@
 const express = require('express');
 const request = require('request');
-const cors = require("cors");
-const querystring = require("querystring");
-const cookieParser = require("cookie-parser");
+const cors = require('cors');
+const querystring = require('querystring');
+const cookieParser = require('cookie-parser');
+const SpotifyWebApi = require('spotify-web-api-js');
+
+let spotifyApi = new SpotifyWebApi();
 
 require('dotenv').config();
 
@@ -92,6 +95,8 @@ app.get('/api/spotify/callback', (req, res) => {
 
         const access_token = body.access_token;
         const refresh_token = body.refresh_token;
+
+        spotifyApi.setAccessToken(acces_token);
 
         const options = {
           url: 'https://api.spotify.com/v1/me/player/recently-played',
